@@ -59,7 +59,7 @@ loadingIndicator: {
     }
   },
   axios: {
-    baseURL: 'http://api.phim77.com/',
+    baseURL: 'https://api.phim77.com/',
     // proxy: true
   },
   toast: {
