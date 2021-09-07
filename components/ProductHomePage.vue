@@ -1,6 +1,6 @@
 <template>
-   <div class="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-3 gap-3">
-        <Product  v-for="item in products" :product="item" :key="item.id"/>
+   <div v-if="products.length" class="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-3 gap-3">
+        <Product v-for="item in products" :product="item" :key="item.id"/>
     </div>
 </template>
 <script>
@@ -16,16 +16,17 @@ export default {
       }
     },
    fetch() {
-    for (let i = 0; i < 20; i++) {
-  this.products.push({
-            id:i,
-            name:"Thiên Hành Cửu Ca",
-            image:"https://animehay.tv/uploads/images/2021/01/dau-la-dai-luc-thumbnail.png",
-            episode:16,
-            episodeTotal:16,
-            link:"/phim/123"
+  
+    },
+      async mounted() {
+    const productHomePageCenter = await this.$getProductHomePageCenter({
+      Start: 0,
+      Length: 16,
+    }).then((res) => {
+      return res.data.data.data;
     });
-    }
-    }
+    
+    this.products = productHomePageCenter;
+  },
 }
 </script>

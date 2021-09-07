@@ -1,7 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'Anime Trung Quốc',
+    title: 'Phim 77',
     htmlAttrs: {
       lang: 'en'
     },
@@ -28,10 +28,14 @@ loadingIndicator: {
 },
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    { src:  '~plugins/axios.js', mode: 'client' },
+    { src:  '~plugins/axios.js',mode:'server' },
     { src: '~plugins/vue-play-video.js', ssr: true },
     //category
     { src: '~/services/CategoryService.js',mode:'client' },
+    //country
+    { src: '~/services/CountryService.js',mode:'client' },
+      //product
+      { src: '~/services/ProductService.js',mode:'client' },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -49,8 +53,13 @@ loadingIndicator: {
     '@nuxtjs/axios',
     '@nuxtjs/toast',
   ],
+  router: {
+    scrollBehavior: function (to, from, savedPosition) {
+      return { x: 0, y: 0 }
+    }
+  },
   axios: {
-    baseURL: 'https://localhost:44381/',
+    baseURL: 'http://api.phim77.com/',
     // proxy: true
   },
   toast: {

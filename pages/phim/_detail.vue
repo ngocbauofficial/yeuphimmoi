@@ -2,24 +2,26 @@
     <div>
         <!-- panner -->
     <div class="relative mx-auto pt-6">
-<img class="block h-72 w-full object-cover object-center" src="/images/0cd5bd22c52e46489cabc7dd6de1e976.jpeg">
+<img class="opacity-60 block h-72 w-full object-cover object-center" :src="movie.Panner">
          <!-- <h2 class="absolute text-gray-200 font-bold left-1/2 transform -translate-x-2/4 bottom-24 text-2xl text-center uppercase">Quyến Tư Lượng</h2> -->
     </div>
     <div class="relative grid grid-cols-8">
             <div class=" col-span-3 p-8">
-              <span class="text-gray-300 font-normal block pb-1">Đạo Diễn : N/A</span>
+              <span class="text-gray-300 font-normal block pb-1">Đạo Diễn : {{movie.Director?movie.Director:'N/A'}}</span>
               <span class="text-gray-300 font-normal block pb-1">Năm Sản Xuất : 2021</span>
-                 <span class="text-gray-300 font-normal block pb-1">Thể Loại : Anime</span>
-               <span class="text-gray-300 font-normal block pb-1">Quốc Gia : <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1">
-Trung Quốc
-</span></span>
+                 <span class="text-gray-300 font-normal block pb-1">Thể Loại : <NuxtLink :to="movie.Category.Link" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-green-600 bg-green-200 uppercase last:mr-0 mr-1">
+{{movie.Category.Name}}
+</NuxtLink></span>
+               <span class="text-gray-300 font-normal block pb-1">Quốc Gia : <NuxtLink :to="movie.Country.Link" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200 uppercase last:mr-0 mr-1">
+{{movie.Country.Name}}
+</NuxtLink></span>
                  <span class="text-gray-300 font-normal block pb-1">Số Tập : <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-red-600 bg-red-200 uppercase last:mr-0 mr-1">
   16/20
 </span> </span>
                   <span class="text-gray-300 font-normal block pb-1">Diễn Viên : N/A </span>
             </div>
             <div class="transform -translate-y-52 col-span-2">
-                    <img class=" rounded-md shadow-2xl   block" src="/images/The-Island-of-Siliang-Character-Feng-Mian.jpg">
+                    <img class=" rounded-md shadow-2xl   block" :src="movie.Avatar">
       <div class="inline-block w-full mt-2">
                   <div class="grid grid-cols-2 gap-1">
                       <button @click="downLoad()" type="button" class="focus:outline-none text-white text-sm py-2.5 px-5 rounded-md bg-green-700 hover:bg-green-800 hover:shadow-lg flex items-center">
@@ -29,7 +31,7 @@ Trung Quốc
                       Tải Phim
                     </button>
 
-                     <NuxtLink :to="'/xem-phim/quyentuluong'" class="focus:outline-none text-white text-sm py-2.5 px-4 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg flex items-center">
+                     <NuxtLink :to="'/xem-phim/'+movie.Link" class="focus:outline-none text-white text-sm py-2.5 px-4 rounded-md bg-blue-500 hover:bg-blue-600 hover:shadow-lg flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -42,7 +44,7 @@ Xem Phim
                 </div>
             </div>
             <div class="col-span-3 p-4">
-                   <h2 class="p-3 text-yellow-600 font-bold text-2xl text-center uppercase">Quyến Tư Lượng (2021)</h2>
+                   <h2 class="p-3 text-yellow-600 font-bold text-2xl text-center uppercase">{{movie.Name}}</h2>
              <!-- rate -->
                  <ul class="flex justify-center">
                    <li>
@@ -76,24 +78,19 @@ Xem Phim
             </div>
     </div>
     <!-- tap phim -->
-    <div class="transform -translate-y-44 max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="transform -translate-y-32 max-w-7xl mx-auto sm:px-6 lg:px-8">
       
        <span class="text-gray-300 font-medium">Tập Phim : </span>
        <span>
-          <button v-for="(item,index) in 16" :key="index" class="mr-1 mb-1 inline-block px-4 py-1 text-xs font-medium leading-6 text-center text-white transition bg-indigo-500 rounded shadow ripple hover:shadow-lg hover:bg-indigo-600 focus:outline-none waves-effect">
-            Tập {{item}}
-          </button>
+          <NuxtLink v-for="(item,index) in movie.MovieProductEpisode" :to="'/xem-phim/'+movie.Link+'?tap='+item.EpisodeNumber" :key="index" class="mr-1 mb-1 inline-block px-4 py-1 text-xs font-medium leading-6 text-center text-white transition bg-indigo-500 rounded shadow ripple hover:shadow-lg hover:bg-indigo-600 focus:outline-none waves-effect">
+            Tập {{item.EpisodeNumber}}
+          </NuxtLink>
        </span>
      
         <!-- /End replace -->
           <div>
-        <span class="block text-gray-300 text-md pt-10">
-            Đồ Lệ（Phàm nhân ): nữ chính, là một phàm nhân, thích huyền ca và là một kỹ sư.
-        Kính Huyền ( Thần tộc) : nam chính, có ước muốn lớn lên sẽ trở thành một chủ tướng khí thế, thần tiên duy nhất trên đảo còn tiên cốt và biết bay ( Phụng Miên vẫn làm được nhưng ẻm thuộc tộc khác)
-        Tu Linh Tê ( Tiên gia):  hậu duệ Thần tộc, là nữ nhân cầm kỳ thư họa đều tinh thông
-        Tiêu Tễ ( Phàm nhân ):  phàm nhân, là tiểu hầu gia nước Lương, đến Đảo Tư Lượng tìm hiểu về tiên nhân
-        Khổng Tước Phụng Miên ( Tộc Linh Hoàng - Thần thú thượng cổ ): một nữ tử thần bí, vô tình bị kẹt trên Đảo Tư Lượng, trông thì trẻ mà tuổi còn hơn tuổi của tất cả người trên đảo cộng lại.
-
+        <span class="block text-gray-300 text-md pt-10" v-html="movie.Description">
+        
         </span>
        
     </div>
@@ -105,6 +102,15 @@ Xem Phim
 <script>
 
 export default {
+  async asyncData({$axios, params,error}) {
+    var link = params.detail;
+   const movie = await $axios.get(`api/movieproduct/GetByLink/${link}`)
+   .then((item)=> {return item.data.data})
+   .catch(e=>{
+         error({ statusCode: 404, message: 'Post not found' })
+   });
+    return { movie }
+  },
       methods:{
         downLoad(){
             this.$toast.info('Tính năng sắp ra mắt')

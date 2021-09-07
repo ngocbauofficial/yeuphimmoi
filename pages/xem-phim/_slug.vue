@@ -1,7 +1,8 @@
 <template>
   <section class="container py-10">
    <h2 class="p-3 transform -translate-y-4 text-yellow-600 font-bold text-2xl text-center uppercase">Quyến Tư Lượng (2021) - <span>Tập 16</span></h2>
-    <div class="video-player-box"
+    <div v-if="EpisodeSourceSelected">
+     <div v-if="!EpisodeSourceSelected.IsIframe" class="video-player-box"
          :playsinline="playsinline"
          @play="onPlayerPlay($event)"
          @pause="onPlayerPause($event)"
@@ -16,19 +17,27 @@
          @statechanged="playerStateChanged($event)"
          v-video-player:myVideoPlayer="playerOptions">
     </div>
-    <div class="text-center pt-5">
-          <button v-for="(item,index) in 3" :key="index" :class="[index==0?'bg-red-700 hover:bg-red-800':'bg-green-600 hover:bg-green-700','mr-1 mb-1 inline-block px-4 py-1 text-xs font-medium leading-6 text-center text-gray-200 transition  rounded shadow ripple hover:shadow-lg  focus:outline-none waves-effect']">
-            Server {{item}}
+    <div v-else v-html="EpisodeSourceSelected.Link">
+    </div>
+     <div class="text-center pt-5">
+          <button @click="setServerSelected(item)"  v-for="(item,index) in episode.MovieProductEpisodeSource" :key="index" :class="[item.Id==EpisodeSourceSelected.Id?'bg-red-700 hover:bg-red-800':'bg-green-600 hover:bg-green-700','mr-1 mb-1 inline-block px-4 py-1 text-xs font-medium leading-6 text-center text-gray-200 transition  rounded shadow ripple hover:shadow-lg  focus:outline-none waves-effect']">
+             Server {{index+1}}
           </button>
     </div>
+    </div>
+   
+   
     <div class="pt-8">
       <span class="text-gray-300 font-medium block my-2">
         Tập Phim (Vietsub) : 
       </span>
     
        <span>
-          <button v-for="(item,index) in 16" :key="index" :class="[index==15?'bg-yellow-600 hover:bg-yellow-700':'bg-indigo-500 hover:bg-indigo-600','mr-1 mb-1 inline-block px-4 py-1 text-xs font-medium leading-6 text-center text-gray-200 transition  rounded shadow ripple hover:shadow-lg  focus:outline-none waves-effect']">
+          <!-- <button v-for="(item,index) in 16" :key="index" :class="[index==15?'bg-yellow-600 hover:bg-yellow-700':'bg-indigo-500 hover:bg-indigo-600','mr-1 mb-1 inline-block px-4 py-1 text-xs font-medium leading-6 text-center text-gray-200 transition  rounded shadow ripple hover:shadow-lg  focus:outline-none waves-effect']">
             Tập {{item}}
+          </button> -->
+            <button @click="changEpisode(item.EpisodeNumber)" v-for="(item,index) in movie.MovieProductEpisode"  :key="index" :class="[item.EpisodeNumber==episode.EpisodeNumber?'bg-yellow-600 hover:bg-yellow-700':'bg-indigo-500 hover:bg-indigo-600','mr-1 mb-1 inline-block px-4 py-1 text-xs font-medium leading-6 text-center text-gray-200 transition  rounded shadow ripple hover:shadow-lg  focus:outline-none waves-effect']">
+            Tập {{item.EpisodeNumber}}
           </button>
        </span>
      
@@ -43,7 +52,18 @@
       return {
         // component options
         playsinline: true,
-        
+        episode:{
+          Id:null,
+          EpisodeNumber:null,
+          MovieProductEpisodeSource:[{
+          Id:null,
+          ProductEpisodeId:null,
+          IsIframe:null,
+          Link:null,
+          }
+          ]
+        },
+        EpisodeSourceSelected:null,
         // videojs options
         playerOptions: {
           muted: false,
@@ -63,10 +83,58 @@
         }
       }
     },
-    mounted() {
-      console.log('this is current player instance object', this.myVideoPlayer)
-    },
+    async asyncData({$axios,params,error}) {
+    let link = params.slug;
+
+   const movie = await $axios.get(`api/movieproduct/GetByLink/${link}`)
+   .then((item)=> {return item.data.data})
+   .catch(e=>{
+         error({ statusCode: 404, message: 'movie not found' })
+   });
+    return { movie }
+  },
+ async mounted(){
+   let episodeNumber = this.$route.query.tap;
+    if(episodeNumber){
+      const data = await this.$getEpisodeByEpisodeNumber(
+        {
+          ProductId:this.movie.Id,
+        EpisodeNumber:Number(episodeNumber)}
+        ).then(res=>{
+          return res.data.data;
+        })
+          this.episode= data;
+    }
+    else{
+        this.episode = await this.$getEpisodeByEpisodeNumber(
+          {ProductId:this.movie.Id,
+          EpisodeNumber:1}).then(res=>{
+          return res.data.data;
+        })
+    }
+    this.EpisodeSourceSelected = this.episode.MovieProductEpisodeSource[0]
+  },
+  created() {
+    
+  },
+
+  
     methods: {
+      setServerSelected(Server){
+        this.EpisodeSourceSelected=Server;
+      },
+     async changEpisode(episodeNumber){
+       this.$router.push('/xem-phim/'+this.movie.Link+'?tap='+episodeNumber);
+        const data = await this.$getEpisodeByEpisodeNumber(
+        {
+          ProductId:this.movie.Id,
+         EpisodeNumber:Number(episodeNumber)}
+        ).then(res=>{
+          return res.data.data;
+        })
+          this.episode= data;
+            this.EpisodeSourceSelected = this.episode.MovieProductEpisodeSource[0]
+      },
       // listen event
       onPlayerPlay(player) {
         // console.log('player play!', player)
@@ -97,7 +165,7 @@
       },
       // or listen state event
       playerStateChanged(playerCurrentState) {
-        console.log('player current update state', playerCurrentState)
+        // console.log('player current update state', playerCurrentState)
       },
       // player is ready
       playerReadied(player) {

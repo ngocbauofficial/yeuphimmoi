@@ -14,32 +14,93 @@
               </NuxtLink>
               <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
-                  <div v-for="(item, index) in navigation"  class="relative" :key="'destop_'+index">
-                   <div v-if="item.subMenu">
-                    <span  @mouseover="onOver(index)" @mouseleave="onLeave()" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'px-3 py-2 rounded-md text-md font-medium cursor-pointer']" :aria-current="item.current ? 'page' : undefined"> {{item.text}}</span>
-                    <div @mouseover="onOver(index)" @mouseleave="onLeave()" v-show="show&&selectedId==index" class="bg-gray-800 border-t top-7 border-gray-400 grid-cols-3 py-2 px-4 absolute grid submenu gap-3 z-10" v-if="index==1" >
-                       <div v-for="colIndex in 3" :key="colIndex" class="grid grid-rows-6 py-5 gap-3">
-                         <NuxtLink 
-                         class="text-gray-400 row-span-1 hover:bg-gray-700 hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium" 
-                         v-for="category in item.subMenu.filter(x=>x.DisplayColumn==colIndex)" 
-                         :to="category.Link" 
-                         :key="category.Id">
-                          {{category.Name}}
-                         </NuxtLink>
-                       </div>
-                   </div>
-                    
-                   </div>
-                   <div v-else>
-                      <NuxtLink  :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'px-3 py-2 rounded-md text-md font-medium']" :aria-current="item.current ? 'page' : undefined" :to="item.link"> {{item.text}}</NuxtLink>
+                  <div
+                    v-for="(item, index) in navigation"
+                    class="relative"
+                    :key="'destop_' + index"
+                  >
+                    <div v-if="item.subMenu">
+                      <span
+                        @mouseover="onOver(index)"
+                        @mouseleave="onLeave()"
+                        :class="[
+                          item.current
+                            ? 'bg-gray-900 text-white'
+                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                          'px-3 py-2 rounded-md text-md font-medium cursor-pointer',
+                        ]"
+                        :aria-current="item.current ? 'page' : undefined"
+                      >
+                        {{ item.text }}</span
+                      >
+                      <div
+                        @mouseover="onOver(index)"
+                        @mouseleave="onLeave()"
+                        v-show="show && selectedId == index"
+                        class="
+                          bg-gray-800
+                          border-t
+                          top-7
+                          border-gray-400
+                          grid-cols-3
+                          py-2
+                          px-4
+                          absolute
+                          grid
+                          submenu
+                          gap-3
+                          z-10
+                        "
+                      >
+                        <div
+                          v-for="colIndex in 3"
+                          :key="colIndex"
+                          class="grid grid-rows-6 py-5 gap-3"
+                        >
+                          <NuxtLink
+                            class="
+                              text-gray-400
+                              row-span-1
+                              hover:bg-gray-700
+                              hover:text-gray-200
+                              px-3
+                              py-2
+                              rounded-md
+                              text-sm
+                              font-medium
+                            "
+                            v-for="submenu in item.subMenu.filter(
+                              (x) => x.DisplayColumn == colIndex
+                            )"
+                            :to="submenu.Link"
+                            :key="submenu.Id"
+                          >
+                            {{ submenu.Name }}
+                          </NuxtLink>
+                        </div>
+                      </div>
                     </div>
+                    <div v-else>
+                      <NuxtLink
+                        :class="[
+                          item.current
+                            ? 'bg-gray-900 text-white'
+                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                          'px-3 py-2 rounded-md text-md font-medium',
+                        ]"
+                        :aria-current="item.current ? 'page' : undefined"
+                        :to="item.link"
+                      >
+                        {{ item.text }}</NuxtLink
+                      >
                     </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="hidden md:block">
               <div class="ml-4 flex items-center md:ml-6">
-             <!-- search  -->
+                <!-- search  -->
               </div>
             </div>
             <div class="-mr-2 flex md:hidden">
@@ -92,14 +153,26 @@
         </div>
         <div :class="[isOpen ? '' : 'hidden', 'md:hidden']">
           <div class="px-2 pt-2 pb-3 sm:px-3">
-            <a v-for="(item,index) in navigation" :key="'mobile_'+index" :href="item.href" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">{{ item.text }}</a>
+            <a
+              v-for="(item, index) in navigation"
+              :key="'mobile_' + index"
+              :href="item.href"
+              class="
+                block
+                px-3
+                py-2
+                rounded-md
+                text-base
+                font-medium
+                text-gray-400
+                hover:text-white
+                hover:bg-gray-700
+              "
+              >{{ item.text }}</a
+            >
           </div>
-      
         </div>
       </nav>
-
-     
-     
     </div>
   </div>
 </template>
@@ -109,92 +182,96 @@ export default {
   data() {
     return {
       isOpen: false,
-      show:false,
-      selectedId:1,
-      categorys:[],
-      country:[],
+      show: false,
+      selectedId: 1,
+      categorys: [],
+      country: [],
       navigation: [
         {
-          code:"homepage",
+          code: "homepage",
           text: "Trang Chủ",
           link: "/",
           current: true,
-      
         },
         {
-          code:"categories",
+          code: "categories",
           text: "Thể Loại",
           link: "/",
           current: false,
-          subMenu:[]
+          subMenu: [],
         },
-           {
-                code:"countries",
+        {
+          code: "countries",
           text: "Quốc Gia",
           link: "/",
           current: false,
-     
+          subMenu: [],
         },
         {
-                   code:"phimle",
+          code: "phimle",
           text: "Phim Lẻ",
-          link: "/",
+          link: "/phim-le",
           current: false,
-
         },
         {
-              code:"phimbo",
+          code: "phimbo",
           text: "Phim Bộ",
-          link: "/",
+          link: "/phim-bo",
           current: false,
-
         },
       ],
     };
   },
-  async fetch() {
-   
-    },
+  async fetch() {},
   methods: {
     toggle() {
       this.isOpen = !this.isOpen;
     },
-      onOver(index) {
-          this.show = true;
-          this.selectedId=index;
-        },
-        onLeave() {
-          this.show = false;
-         this.selectedId=null;
-        }
+    onOver(index) {
+      this.show = true;
+      console.log(index);
+      this.selectedId = index;
+    },
+    onLeave() {
+      this.show = false;
+      this.selectedId = null;
+    },
   },
-  computed:{
-      CategoryColOne(){
-       return this.navigation.filter(item=>item.code=="categories")[0].subMenu.filter((x)=>{return x.DisplayColumn==1})
-      },
-       CategoryColTwo(){
-       return this.navigation.filter(item=>item.code=="categories")[0].subMenu.filter((x)=>{return x.DisplayColumn==2})
-      },
-       CategoryColThree(){
-       return this.navigation.filter(item=>item.code=="categories")[0].subMenu.filter((x)=>{return x.DisplayColumn==3})
-      }
+  computed: {
+  
   },
   async mounted() {
-      const categories = await this.$getCategoryNavigation({
-        Start:0,
-        Length:100
-    }).then((res)=>{
-        return res.data.data.data;
+     // country
+
+    const countries = await this.$getCountryNavigation({
+      Start: 0,
+      Length: 100,
+    }).then((res) => {
+      return res.data.data.data;
     });
-      for (var i = 0; i < categories.length; i++) {
-      categories[i].Link ='/danh-muc/' +categories[i].Link;
+    for (var i = 0; i < countries.length; i++) {
+      countries[i].Link = "/quoc-gia/" + countries[i].Link;
     }
-      this.navigation.filter(item=>item.code=="categories")[0].subMenu =categories;
-      }
+    this.navigation.filter((item) => item.code == "countries")[0].subMenu = countries;
+    // category
+    const categories = await this.$getCategoryNavigation({
+      Start: 0,
+      Length: 100,
+    }).then((res) => {
+      return res.data.data.data;
+    });
+    for (var i = 0; i < categories.length; i++) {
+      categories[i].Link = "/danh-muc/" + categories[i].Link;
+    }
+    this.navigation.filter((item) => item.code == "categories")[0].subMenu =
+      categories;
+
+   
+  },
 };
 </script>
 <style scoped>
-.submenu{
-  width:550px;
+.submenu {
+  width: 550px;
 }
 </style>
