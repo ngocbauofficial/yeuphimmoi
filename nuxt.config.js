@@ -24,7 +24,7 @@ export default {
   generate: {
     fallback: true
   },
-ssr:false,
+ssr:true,
 loadingIndicator: {
   name: 'folding-cube',
   color: '#3B8070',
