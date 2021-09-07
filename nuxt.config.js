@@ -20,7 +20,6 @@ export default {
   css: [
     'video.js/dist/video-js.css'
   ],
-   target: 'static',
 ssr:true,
 loadingIndicator: {
   name: 'folding-cube',
